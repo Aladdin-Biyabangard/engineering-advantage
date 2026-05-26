@@ -92,6 +92,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { property: "og:title", content: "Ingress Engineering — Software Architecture, AI, DevOps & Security" },
+      { name: "twitter:title", content: "Ingress Engineering — Software Architecture, AI, DevOps & Security" },
+      { name: "description", content: "Trusted Engineering Partners offers expert software design, development, AI, DevOps, and security services for businesses." },
+      { property: "og:description", content: "Trusted Engineering Partners offers expert software design, development, AI, DevOps, and security services for businesses." },
+      { name: "twitter:description", content: "Trusted Engineering Partners offers expert software design, development, AI, DevOps, and security services for businesses." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/41c4ee1b-aeac-427a-96bd-ee5c8cc838d2/id-preview-198c63a0--8e439fc7-96d3-4242-91c5-b35250d2dc65.lovable.app-1779784666382.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/41c4ee1b-aeac-427a-96bd-ee5c8cc838d2/id-preview-198c63a0--8e439fc7-96d3-4242-91c5-b35250d2dc65.lovable.app-1779784666382.png" },
     ],
     links: [
       {
