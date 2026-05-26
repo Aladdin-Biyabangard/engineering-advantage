@@ -72,11 +72,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Ingress Engineering — Software Architecture, AI, DevOps & Security" },
+      {
+        name: "description",
+        content:
+          "Engineering expertise for companies that need reliable software. Architecture, AI, DevOps, custom development, and security services from senior engineers.",
+      },
+      { name: "author", content: "Ingress Engineering" },
+      {
+        property: "og:title",
+        content: "Ingress Engineering — Reliable software, built by senior engineers",
+      },
+      {
+        property: "og:description",
+        content:
+          "Architecture, AI, DevOps, custom development, and security services delivered by experienced engineers.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
