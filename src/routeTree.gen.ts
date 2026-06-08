@@ -13,7 +13,13 @@ import { Route as ServicesRouteImport } from './routes/services'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CaseStudiesRouteImport } from './routes/case-studies'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as AzRouteRouteImport } from './routes/az/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AzIndexRouteImport } from './routes/az/index'
+import { Route as AzServicesRouteImport } from './routes/az/services'
+import { Route as AzContactRouteImport } from './routes/az/contact'
+import { Route as AzCaseStudiesRouteImport } from './routes/az/case-studies'
+import { Route as AzAboutRouteImport } from './routes/az/about'
 
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
@@ -35,18 +41,54 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AzRouteRoute = AzRouteRouteImport.update({
+  id: '/az',
+  path: '/az',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AzIndexRoute = AzIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AzRouteRoute,
+} as any)
+const AzServicesRoute = AzServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => AzRouteRoute,
+} as any)
+const AzContactRoute = AzContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => AzRouteRoute,
+} as any)
+const AzCaseStudiesRoute = AzCaseStudiesRouteImport.update({
+  id: '/case-studies',
+  path: '/case-studies',
+  getParentRoute: () => AzRouteRoute,
+} as any)
+const AzAboutRoute = AzAboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => AzRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/az': typeof AzRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/case-studies': typeof CaseStudiesRoute
   '/contact': typeof ContactRoute
   '/services': typeof ServicesRoute
+  '/az/about': typeof AzAboutRoute
+  '/az/case-studies': typeof AzCaseStudiesRoute
+  '/az/contact': typeof AzContactRoute
+  '/az/services': typeof AzServicesRoute
+  '/az/': typeof AzIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,25 +96,70 @@ export interface FileRoutesByTo {
   '/case-studies': typeof CaseStudiesRoute
   '/contact': typeof ContactRoute
   '/services': typeof ServicesRoute
+  '/az/about': typeof AzAboutRoute
+  '/az/case-studies': typeof AzCaseStudiesRoute
+  '/az/contact': typeof AzContactRoute
+  '/az/services': typeof AzServicesRoute
+  '/az': typeof AzIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/az': typeof AzRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/case-studies': typeof CaseStudiesRoute
   '/contact': typeof ContactRoute
   '/services': typeof ServicesRoute
+  '/az/about': typeof AzAboutRoute
+  '/az/case-studies': typeof AzCaseStudiesRoute
+  '/az/contact': typeof AzContactRoute
+  '/az/services': typeof AzServicesRoute
+  '/az/': typeof AzIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/case-studies' | '/contact' | '/services'
+  fullPaths:
+    | '/'
+    | '/az'
+    | '/about'
+    | '/case-studies'
+    | '/contact'
+    | '/services'
+    | '/az/about'
+    | '/az/case-studies'
+    | '/az/contact'
+    | '/az/services'
+    | '/az/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/case-studies' | '/contact' | '/services'
-  id: '__root__' | '/' | '/about' | '/case-studies' | '/contact' | '/services'
+  to:
+    | '/'
+    | '/about'
+    | '/case-studies'
+    | '/contact'
+    | '/services'
+    | '/az/about'
+    | '/az/case-studies'
+    | '/az/contact'
+    | '/az/services'
+    | '/az'
+  id:
+    | '__root__'
+    | '/'
+    | '/az'
+    | '/about'
+    | '/case-studies'
+    | '/contact'
+    | '/services'
+    | '/az/about'
+    | '/az/case-studies'
+    | '/az/contact'
+    | '/az/services'
+    | '/az/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AzRouteRoute: typeof AzRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
   CaseStudiesRoute: typeof CaseStudiesRoute
   ContactRoute: typeof ContactRoute
@@ -109,6 +196,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/az': {
+      id: '/az'
+      path: '/az'
+      fullPath: '/az'
+      preLoaderRoute: typeof AzRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -116,11 +210,66 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/az/': {
+      id: '/az/'
+      path: '/'
+      fullPath: '/az/'
+      preLoaderRoute: typeof AzIndexRouteImport
+      parentRoute: typeof AzRouteRoute
+    }
+    '/az/services': {
+      id: '/az/services'
+      path: '/services'
+      fullPath: '/az/services'
+      preLoaderRoute: typeof AzServicesRouteImport
+      parentRoute: typeof AzRouteRoute
+    }
+    '/az/contact': {
+      id: '/az/contact'
+      path: '/contact'
+      fullPath: '/az/contact'
+      preLoaderRoute: typeof AzContactRouteImport
+      parentRoute: typeof AzRouteRoute
+    }
+    '/az/case-studies': {
+      id: '/az/case-studies'
+      path: '/case-studies'
+      fullPath: '/az/case-studies'
+      preLoaderRoute: typeof AzCaseStudiesRouteImport
+      parentRoute: typeof AzRouteRoute
+    }
+    '/az/about': {
+      id: '/az/about'
+      path: '/about'
+      fullPath: '/az/about'
+      preLoaderRoute: typeof AzAboutRouteImport
+      parentRoute: typeof AzRouteRoute
+    }
   }
 }
 
+interface AzRouteRouteChildren {
+  AzAboutRoute: typeof AzAboutRoute
+  AzCaseStudiesRoute: typeof AzCaseStudiesRoute
+  AzContactRoute: typeof AzContactRoute
+  AzServicesRoute: typeof AzServicesRoute
+  AzIndexRoute: typeof AzIndexRoute
+}
+
+const AzRouteRouteChildren: AzRouteRouteChildren = {
+  AzAboutRoute: AzAboutRoute,
+  AzCaseStudiesRoute: AzCaseStudiesRoute,
+  AzContactRoute: AzContactRoute,
+  AzServicesRoute: AzServicesRoute,
+  AzIndexRoute: AzIndexRoute,
+}
+
+const AzRouteRouteWithChildren =
+  AzRouteRoute._addFileChildren(AzRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AzRouteRoute: AzRouteRouteWithChildren,
   AboutRoute: AboutRoute,
   CaseStudiesRoute: CaseStudiesRoute,
   ContactRoute: ContactRoute,
@@ -129,3 +278,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

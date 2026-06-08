@@ -1,74 +1,54 @@
+import { en } from "@/lib/i18n/locales/en";
+import type { TranslationDict } from "@/lib/i18n/types";
+
+export type ServiceIcon =
+  | "Boxes"
+  | "Cpu"
+  | "ServerCog"
+  | "Code2"
+  | "ShieldCheck"
+  | "Target"
+  | "FileSearch"
+  | "Cloud"
+  | "GitBranch";
+
+export type ServiceSlug =
+  | "architecture"
+  | "ai"
+  | "devops"
+  | "custom-software"
+  | "security"
+  | "penetration-testing"
+  | "secure-code-review"
+  | "cloud-security"
+  | "devsecops";
+
 export type Service = {
-  slug: string;
+  slug: ServiceSlug;
   title: string;
-  icon: "Boxes" | "Cpu" | "ServerCog" | "Code2" | "ShieldCheck";
+  icon: ServiceIcon;
   summary: string;
   details: string[];
 };
 
-export const services: Service[] = [
-  {
-    slug: "architecture",
-    title: "Software Architecture Consulting",
-    icon: "Boxes",
-    summary:
-      "System design, scalability, architecture reviews, and long-term technical strategy.",
-    details: [
-      "Greenfield system design and domain modeling",
-      "Architecture reviews of existing platforms",
-      "Scalability, performance, and reliability strategy",
-      "Technical roadmaps aligned with business goals",
-    ],
-  },
-  {
-    slug: "ai",
-    title: "AI Consulting",
-    icon: "Cpu",
-    summary: "AI adoption, LLM integrations, automation, and end-to-end AI product development.",
-    details: [
-      "LLM integration into existing products and workflows",
-      "RAG, agents, and evaluation pipelines",
-      "AI-powered automation for internal operations",
-      "Full AI product development, from prototype to production",
-    ],
-  },
-  {
-    slug: "devops",
-    title: "DevOps & Infrastructure",
-    icon: "ServerCog",
-    summary:
-      "Cloud, CI/CD, Kubernetes, monitoring, reliability, and infrastructure design.",
-    details: [
-      "Cloud architecture on AWS, GCP, and Azure",
-      "CI/CD pipelines and developer platforms",
-      "Kubernetes, containers, and platform engineering",
-      "Observability, incident response, and SRE practices",
-    ],
-  },
-  {
-    slug: "custom-software",
-    title: "Custom Software Development",
-    icon: "Code2",
-    summary:
-      "Web platforms, backend systems, APIs, internal tools, and enterprise software.",
-    details: [
-      "Web platforms and SaaS products",
-      "Backend systems, APIs, and integrations",
-      "Internal tools and operations dashboards",
-      "Enterprise software built for the long run",
-    ],
-  },
-  {
-    slug: "security",
-    title: "Security & Penetration Testing",
-    icon: "ShieldCheck",
-    summary:
-      "Security audits, pentesting, vulnerability assessment, and secure architecture.",
-    details: [
-      "Application and infrastructure penetration testing",
-      "Security audits and threat modeling",
-      "Vulnerability assessment and remediation guidance",
-      "Secure-by-default architecture and code review",
-    ],
-  },
+export const serviceCatalog: { slug: ServiceSlug; icon: ServiceIcon }[] = [
+  { slug: "architecture", icon: "Boxes" },
+  { slug: "ai", icon: "Cpu" },
+  { slug: "devops", icon: "ServerCog" },
+  { slug: "custom-software", icon: "Code2" },
+  { slug: "security", icon: "ShieldCheck" },
+  { slug: "penetration-testing", icon: "Target" },
+  { slug: "secure-code-review", icon: "FileSearch" },
+  { slug: "cloud-security", icon: "Cloud" },
+  { slug: "devsecops", icon: "GitBranch" },
 ];
+
+export function getServices(t: TranslationDict): Service[] {
+  return serviceCatalog.map(({ slug, icon }) => {
+    const copy = t.services[slug];
+    return { slug, icon, title: copy.title, summary: copy.summary, details: copy.details };
+  });
+}
+
+/** English defaults for SSR structured data and static head tags. */
+export const servicesEn = getServices(en);

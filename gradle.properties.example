@@ -1,0 +1,7 @@
+# Copy to gradle.properties and fill in. Do not commit gradle.properties (see .gitignore).
+
+dockerHubEmail=you@example.com
+dockerHubUsername=your-dockerhub-username
+dockerHubPassword=your-dockerhub-token-or-password
+dockerRepoUrl=your-dockerhub-username
+dockerImageName=ingress-consultancy

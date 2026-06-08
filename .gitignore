@@ -20,6 +20,9 @@ dist-ssr
 .wrangler/
 .dev.vars
 
+# Docker Hub credentials (use gradle.properties.example)
+gradle.properties
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

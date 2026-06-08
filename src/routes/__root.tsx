@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
@@ -7,26 +8,61 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
+import { LocalizedLink } from "@/components/localized-link";
 import { SiteLayout } from "@/components/site-layout";
+import { I18nProvider, useI18n } from "@/lib/i18n/context";
 
 import appCss from "../styles.css?url";
+import { businessStructuredDataScript, rootHeadExtras, SITE_NAME } from "@/lib/seo";
 
 function NotFoundComponent() {
+  return (
+    <I18nProvider>
+      <NotFoundContent />
+    </I18nProvider>
+  );
+}
+
+function NotFoundContent() {
+  const { t } = useI18n();
+
+  useEffect(() => {
+    const previousTitle = document.title;
+    document.title = `404 | ${SITE_NAME}`;
+
+    let robots = document.querySelector<HTMLMetaElement>('meta[name="robots"]');
+    const created = !robots;
+    if (!robots) {
+      robots = document.createElement("meta");
+      robots.name = "robots";
+      document.head.appendChild(robots);
+    }
+    const previousRobots = robots.content;
+    robots.content = "noindex, nofollow";
+
+    return () => {
+      document.title = previousTitle;
+      if (created) {
+        robots?.remove();
+      } else if (robots) {
+        robots.content = previousRobots;
+      }
+    };
+  }, []);
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
-        </p>
+        <h2 className="mt-4 text-xl font-semibold text-foreground">{t.notFound.title}</h2>
+        <p className="mt-2 text-sm text-muted-foreground">{t.notFound.body}</p>
         <div className="mt-6">
-          <Link
+          <LocalizedLink
             to="/"
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Go home
-          </Link>
+            {t.common.goHome}
+          </LocalizedLink>
         </div>
       </div>
     </div>
@@ -35,17 +71,23 @@ function NotFoundComponent() {
 
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
+
+  return (
+    <I18nProvider>
+      <ErrorContent reset={reset} />
+    </I18nProvider>
+  );
+}
+
+function ErrorContent({ reset }: { reset: () => void }) {
   const router = useRouter();
+  const { t } = useI18n();
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
-        </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
-        </p>
+        <h1 className="text-xl font-semibold tracking-tight text-foreground">{t.error.title}</h1>
+        <p className="mt-2 text-sm text-muted-foreground">{t.error.body}</p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {
@@ -54,13 +96,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
             }}
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Try again
+            {t.common.tryAgain}
           </button>
           <a
             href="/"
             className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
           >
-            Go home
+            {t.common.goHome}
           </a>
         </div>
       </div>
@@ -69,44 +111,41 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Ingress Engineering — Software Architecture, AI, DevOps & Security" },
-      {
-        name: "description",
-        content:
-          "Engineering expertise for companies that need reliable software. Architecture, AI, DevOps, custom development, and security services from senior engineers.",
-      },
-      { name: "author", content: "Ingress Engineering" },
-      {
-        property: "og:title",
-        content: "Ingress Engineering — Reliable software, built by senior engineers",
-      },
-      {
-        property: "og:description",
-        content:
-          "Architecture, AI, DevOps, custom development, and security services delivered by experienced engineers.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
-      { property: "og:title", content: "Ingress Engineering — Software Architecture, AI, DevOps & Security" },
-      { name: "twitter:title", content: "Ingress Engineering — Software Architecture, AI, DevOps & Security" },
-      { name: "description", content: "Trusted Engineering Partners offers expert software design, development, AI, DevOps, and security services for businesses." },
-      { property: "og:description", content: "Trusted Engineering Partners offers expert software design, development, AI, DevOps, and security services for businesses." },
-      { name: "twitter:description", content: "Trusted Engineering Partners offers expert software design, development, AI, DevOps, and security services for businesses." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/41c4ee1b-aeac-427a-96bd-ee5c8cc838d2/id-preview-198c63a0--8e439fc7-96d3-4242-91c5-b35250d2dc65.lovable.app-1779784666382.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/41c4ee1b-aeac-427a-96bd-ee5c8cc838d2/id-preview-198c63a0--8e439fc7-96d3-4242-91c5-b35250d2dc65.lovable.app-1779784666382.png" },
-    ],
-    links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
-    ],
-  }),
+  head: () => {
+    const extras = rootHeadExtras();
+    return {
+      meta: [
+        { charSet: "utf-8" },
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        { name: "author", content: SITE_NAME },
+        { name: "robots", content: "index, follow, max-image-preview:large" },
+        { property: "og:type", content: "website" },
+        ...extras.meta,
+      ],
+      links: [
+        { rel: "icon", href: "/logo.svg", type: "image/svg+xml" },
+        { rel: "apple-touch-icon", href: "/logo.svg" },
+        {
+          rel: "preconnect",
+          href: "https://fonts.googleapis.com",
+        },
+        {
+          rel: "preconnect",
+          href: "https://fonts.gstatic.com",
+          crossOrigin: "anonymous",
+        },
+        {
+          rel: "stylesheet",
+          href: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap",
+        },
+        {
+          rel: "stylesheet",
+          href: appCss,
+        },
+      ],
+      scripts: [businessStructuredDataScript()],
+    };
+  },
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
@@ -132,7 +171,9 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SiteLayout />
+      <I18nProvider>
+        <SiteLayout />
+      </I18nProvider>
     </QueryClientProvider>
   );
 }
